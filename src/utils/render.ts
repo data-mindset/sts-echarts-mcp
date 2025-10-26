@@ -1,4 +1,5 @@
 import path from "node:path";
+import fs from "node:fs";
 import { GlobalFonts, createCanvas } from "@napi-rs/canvas";
 import * as echarts from "echarts";
 import type { EChartsOption } from "echarts";
@@ -10,22 +11,15 @@ const fontPath = path.join(
   "AlibabaPuHuiTi-3-55-Regular.otf",
 );
 
-// Register font with error handling
+// Register font with graceful error handling
+// Silently continue if font is not found - charts will use system default fonts
 try {
-  console.log(`[ECharts] Attempting to load font from: ${fontPath}`);
-  const fontExists = require("fs").existsSync(fontPath);
-  console.log(`[ECharts] Font file exists: ${fontExists}`);
-
-  if (fontExists) {
+  if (fs.existsSync(fontPath)) {
     GlobalFonts.registerFromPath(fontPath, "sans-serif");
-    console.log("[ECharts] Font registered successfully");
-  } else {
-    console.error(`[ECharts] Font file not found at: ${fontPath}`);
-    console.log(`[ECharts] Current __dirname: ${__dirname}`);
-    console.log(`[ECharts] Current process.cwd(): ${process.cwd()}`);
   }
 } catch (error) {
-  console.error("[ECharts] Failed to register font:", error);
+  // Silently ignore font loading errors
+  // Charts will render with system default fonts
 }
 
 /**
