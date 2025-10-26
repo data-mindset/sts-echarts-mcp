@@ -1,0 +1,30 @@
+{
+	"name": "sts-echarts-mcp",
+	"version": "0.1.0",
+	"description": "Generate visual charts using Apache ECharts with AI MCP dynamically for Smithery AI",
+	"main": "index.js",
+	"module": "./src/index.ts",
+	"type": "module",
+	"scripts": {
+		"dev": "smithery dev",
+		"build": "smithery build"
+	},
+	"keywords": ["mcp", "echarts", "visualization", "chart", "smithery"],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "^1.20.0",
+		"@smithery/sdk": "^1.7.4",
+		"@napi-rs/canvas": "^0.1.73",
+		"echarts": "^6.0.0",
+		"express": "^5.1.0",
+		"minio": "^8.0.5",
+		"zod": "^3.25.46"
+	},
+	"devDependencies": {
+		"@smithery/cli": "^1.6.3",
+		"@types/express": "^5.0.3",
+		"@types/node": "^22.15.21",
+		"typescript": "^5.8.3"
+	}
+}
