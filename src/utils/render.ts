@@ -6,12 +6,27 @@ import type { EChartsOption } from "echarts";
 const fontPath = path.join(
   __dirname,
   "..",
-  "..",
   "fonts",
   "AlibabaPuHuiTi-3-55-Regular.otf",
 );
 
-GlobalFonts.registerFromPath(fontPath, "sans-serif");
+// Register font with error handling
+try {
+  console.log(`[ECharts] Attempting to load font from: ${fontPath}`);
+  const fontExists = require("fs").existsSync(fontPath);
+  console.log(`[ECharts] Font file exists: ${fontExists}`);
+
+  if (fontExists) {
+    GlobalFonts.registerFromPath(fontPath, "sans-serif");
+    console.log("[ECharts] Font registered successfully");
+  } else {
+    console.error(`[ECharts] Font file not found at: ${fontPath}`);
+    console.log(`[ECharts] Current __dirname: ${__dirname}`);
+    console.log(`[ECharts] Current process.cwd(): ${process.cwd()}`);
+  }
+} catch (error) {
+  console.error("[ECharts] Failed to register font:", error);
+}
 
 /**
  * Render ECharts chart, return Buffer or string
