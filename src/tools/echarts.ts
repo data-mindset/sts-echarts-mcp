@@ -2,22 +2,21 @@ import { z } from "zod";
 import { generateChartImage } from "../utils";
 import { OutputTypeSchema } from "../utils/schema";
 
-function isValidEChartsOption(option: string): boolean {
+function isValidEChartsOption(option: any): boolean {
   try {
-    const parsedOption = JSON.parse(option);
-    if (typeof parsedOption !== "object" || parsedOption === null) {
+    if (typeof option !== "object" || option === null) {
       return false;
     }
 
     // Basic validation for common chart types that require axes
-    if (parsedOption.series && Array.isArray(parsedOption.series)) {
-      const hasCartesianSeries = parsedOption.series.some(
+    if (option.series && Array.isArray(option.series)) {
+      const hasCartesianSeries = option.series.some(
         (series: { type?: string }) =>
           series.type && ["bar", "line", "scatter"].includes(series.type),
       );
 
       // If chart has cartesian series, it should have proper axis configuration
-      if (hasCartesianSeries && !parsedOption.xAxis && !parsedOption.yAxis) {
+      if (hasCartesianSeries && !option.xAxis && !option.yAxis) {
         console.error(
           "[DEBUG] Chart validation failed: Cartesian chart missing axis configuration",
         );
@@ -37,9 +36,18 @@ export const generateEChartsTool = {
     "Generate visual charts using Apache ECharts with echarts option and configuration dynamically. Apache ECharts is an Open Source JavaScript Visualization Library, which is used to create interactive charts and visualizations in web applications. It supports a wide range of chart types, including line charts, bar charts, pie charts, scatter plots, and more. ECharts is highly customizable and can be integrated with various data sources to create dynamic visualizations.",
   inputSchema: z.object({
     echartsOption: z
-      .string()
+      .union([
+        z.string().transform((str) => {
+          try {
+            return JSON.parse(str);
+          } catch {
+            throw new Error("Invalid JSON string for echartsOption");
+          }
+        }),
+        z.record(z.any()),
+      ])
       .describe(
-        `ECharts option and configuration used to generate charts. For example:
+        `ECharts option and configuration used to generate charts. Can be either a JSON string or an object. For example:
 {
   "title": {
     "text": "ECharts Entry Example",
@@ -58,13 +66,9 @@ export const generateEChartsTool = {
   }]
 }
 
-ATTENTION: A valid ECharts option must be a valid JSON string, and cannot be empty.
+ATTENTION: A valid ECharts option must be a valid JSON object or string, and cannot be empty.
 `,
-      )
-      .nonempty({
-        message:
-          "A valid ECharts option must be a valid JSON string, and cannot be empty.",
-      }),
+      ),
     width: z
       .number()
       .min(
@@ -93,7 +97,7 @@ ATTENTION: A valid ECharts option must be a valid JSON string, and cannot be emp
     outputType: OutputTypeSchema,
   }),
   run: async (params: {
-    echartsOption: string;
+    echartsOption: any; // Can be object or string (Zod will transform string to object)
     width?: number;
     height?: number;
     theme?: "default" | "dark";
@@ -104,7 +108,7 @@ ATTENTION: A valid ECharts option must be a valid JSON string, and cannot be emp
     // Debug logging (writes to stderr, won't interfere with MCP protocol)
     if (process.env.DEBUG_MCP_ECHARTS) {
       console.error("[DEBUG] ECharts tool called with params:", {
-        echartsOptionLength: echartsOption?.length,
+        echartsOptionType: typeof echartsOption,
         width,
         height,
         theme,
@@ -114,11 +118,12 @@ ATTENTION: A valid ECharts option must be a valid JSON string, and cannot be emp
 
     if (!isValidEChartsOption(echartsOption)) {
       throw new Error(
-        "Invalid ECharts option, a valid ECharts option must be a valid JSON string, and cannot be empty.",
+        "Invalid ECharts option, a valid ECharts option must be a valid JSON object, and cannot be empty.",
       );
     }
 
-    const option = JSON.parse(echartsOption);
+    // echartsOption is already an object (Zod transformed it if it was a string)
+    const option = echartsOption;
 
     // Use the unified image generation method
     return await generateChartImage(
