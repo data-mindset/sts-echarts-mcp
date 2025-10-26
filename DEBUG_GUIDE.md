@@ -1,5 +1,90 @@
 # Debugging Smithery Playground Errors
 
+## ⚠️ How to Find Your MCP Server Error
+
+When you see "An error occurred" in Smithery Playground, the browser console may show many errors - but **most are from Smithery's UI, not your server!**
+
+### Step-by-Step: Finding the Real Error
+
+#### 1. Open Browser Developer Tools
+
+- Press `F12` (or `Cmd+Option+I` on Mac)
+- You'll see many errors - **ignore the Console tab for now**
+
+#### 2. Go to Network Tab (Most Important!)
+
+1. Click the **"Network"** tab in Developer Tools
+2. Make sure recording is on (red circle should be active)
+3. Clear previous requests (trash icon)
+
+#### 3. Trigger the Error
+
+1. In Smithery Playground, try to **Connect** or **Call a Tool**
+2. Watch the Network tab for new requests
+
+#### 4. Find the Failed Request
+
+Look for requests that are:
+
+- **Red colored** (failed status)
+- Named like: `/mcp?MINIO_ENDPOINT=...` or similar
+- Status codes like: **500**, **422**, **400**
+
+#### 5. Read the Actual Error
+
+1. **Click on the failed request**
+2. Click the **"Response"** or **"Preview"** tab
+3. **Copy the error message** - this is your real error!
+
+### Example: What You'll See
+
+**Console Tab** (❌ Ignore these - they're Smithery UI errors):
+
+```text
+TypeError: e.split is not a function
+Failed to load RSC payload
+[React Scan] Failed to load
+```
+
+**Network Tab Response** (✅ This is your real error!):
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": -32602,
+    "message": "Expected string, received object",
+    "path": ["echartsOption"]
+  }
+}
+```
+
+### Common MCP Error Messages
+
+**Error -32602**: Invalid parameters
+
+```text
+"message": "Expected string, received object"
+```
+
+→ **Solution**: Parameter type mismatch in tool schema
+
+**Error -32603**: Internal server error
+
+```text
+"message": "MinIO is not configured"
+```
+
+→ **Solution**: Check MinIO configuration
+
+**Error ECONNREFUSED**:
+
+```text
+"message": "Failed to connect to MinIO server"
+```
+
+→ **Solution**: MinIO server unreachable
+
 ## Method 1: Browser Developer Console (Recommended)
 
 1. **Open Developer Tools**:
