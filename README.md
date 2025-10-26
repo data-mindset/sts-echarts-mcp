@@ -1,5 +1,7 @@
 # sts-echarts-mcp
 
+[![smithery badge](https://smithery.ai/badge/@data-mindset/sts-echarts-mcp)](https://smithery.ai/server/@data-mindset/sts-echarts-mcp)
+
 Generate visual charts using Apache ECharts with AI MCP dynamically for Smithery AI.
 
 Built with [Smithery SDK](https://smithery.ai/docs)
@@ -33,6 +35,15 @@ Default credentials: `minioadmin` / `minioadmin`
 
 ## Getting Started
 
+### Installing via Smithery
+
+To install ECharts Chart Maker automatically via [Smithery](https://smithery.ai/server/@data-mindset/sts-echarts-mcp):
+
+```bash
+npx -y @smithery/cli install @data-mindset/sts-echarts-mcp
+```
+
+### Manual Installation
 1. Install dependencies:
    ```bash
    npm install
@@ -63,4 +74,3 @@ Deploy to Smithery at [smithery.ai/new](https://smithery.ai/new)
 ## License
 
 MIT
-
