@@ -10,13 +10,13 @@ startCommand:
         description: MinIO server endpoint (without protocol)
         default: localhost
       MINIO_PORT:
-        type: string
+        type: number
         description: MinIO server port
-        default: "9000"
+        default: 9000
       MINIO_USE_SSL:
-        type: string
-        description: Use SSL/HTTPS connection (true/false)
-        default: "false"
+        type: boolean
+        description: Use SSL/HTTPS connection
+        default: false
       MINIO_ACCESS_KEY:
         type: string
         description: MinIO access key
@@ -37,8 +37,8 @@ startCommand:
       args: ['.smithery/index.js'],
       env: {
         MINIO_ENDPOINT: config.MINIO_ENDPOINT || 'localhost',
-        MINIO_PORT: config.MINIO_PORT || '9000',
-        MINIO_USE_SSL: config.MINIO_USE_SSL || 'false',
+        MINIO_PORT: String(config.MINIO_PORT ?? 9000),
+        MINIO_USE_SSL: String(config.MINIO_USE_SSL ?? false),
         MINIO_ACCESS_KEY: config.MINIO_ACCESS_KEY,
         MINIO_SECRET_KEY: config.MINIO_SECRET_KEY,
         MINIO_BUCKET_NAME: config.MINIO_BUCKET_NAME || 'sts-echarts'
@@ -46,8 +46,8 @@ startCommand:
     })
   exampleConfig:
     MINIO_ENDPOINT: localhost
-    MINIO_PORT: "9000"
-    MINIO_USE_SSL: "false"
+    MINIO_PORT: 9000
+    MINIO_USE_SSL: false
     MINIO_ACCESS_KEY: minioadmin
     MINIO_SECRET_KEY: minioadmin
     MINIO_BUCKET_NAME: sts-echarts
