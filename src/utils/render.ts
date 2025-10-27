@@ -7,10 +7,10 @@ import type { EChartsOption } from "echarts";
 // Font will be copied to .smithery/fonts/ during build via postbuild script
 const fontPath = path.join(__dirname, "fonts", "Roboto-Regular.ttf");
 
-// Register font - postbuild script ensures it's available
+// Register font with specific family name "Roboto"
 try {
   if (fs.existsSync(fontPath)) {
-    GlobalFonts.registerFromPath(fontPath, "sans-serif");
+    GlobalFonts.registerFromPath(fontPath, "Roboto");
   }
 } catch (error) {
   // Font loading failed - charts will render without text
@@ -40,7 +40,7 @@ export async function renderECharts(
       ...echartsOption,
       animation: false,
       textStyle: {
-        fontFamily: "sans-serif",
+        fontFamily: "Roboto",
         ...(echartsOption.textStyle || {}),
       },
     };
@@ -79,13 +79,13 @@ export async function renderECharts(
     ...echartsOption,
     animation: false,
     textStyle: {
-      fontFamily: "sans-serif",
+      fontFamily: "Roboto",
       ...(echartsOption.textStyle || {}),
     },
     title: {
       ...(echartsOption.title || {}),
       textStyle: {
-        fontFamily: "sans-serif",
+        fontFamily: "Roboto",
         ...((echartsOption.title as any)?.textStyle || {}),
       },
     },
@@ -93,14 +93,14 @@ export async function renderECharts(
       ? echartsOption.xAxis.map((axis) => ({
           ...axis,
           axisLabel: {
-            fontFamily: "sans-serif",
+            fontFamily: "Roboto",
             ...(axis.axisLabel || {}),
           },
         }))
       : {
           ...(echartsOption.xAxis || {}),
           axisLabel: {
-            fontFamily: "sans-serif",
+            fontFamily: "Roboto",
             ...((echartsOption.xAxis as any)?.axisLabel || {}),
           },
         },
@@ -108,21 +108,21 @@ export async function renderECharts(
       ? echartsOption.yAxis.map((axis) => ({
           ...axis,
           axisLabel: {
-            fontFamily: "sans-serif",
+            fontFamily: "Roboto",
             ...(axis.axisLabel || {}),
           },
         }))
       : {
           ...(echartsOption.yAxis || {}),
           axisLabel: {
-            fontFamily: "sans-serif",
+            fontFamily: "Roboto",
             ...((echartsOption.yAxis as any)?.axisLabel || {}),
           },
         },
     legend: {
       ...(echartsOption.legend || {}),
       textStyle: {
-        fontFamily: "sans-serif",
+        fontFamily: "Roboto",
         ...((echartsOption.legend as any)?.textStyle || {}),
       },
     },
