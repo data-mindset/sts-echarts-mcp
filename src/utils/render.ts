@@ -35,10 +35,17 @@ export async function renderECharts(
       height,
     });
 
-    chart.setOption({
+    // Inject font configuration for SVG rendering
+    const optionsWithFont = {
       ...echartsOption,
       animation: false,
-    });
+      textStyle: {
+        fontFamily: "sans-serif",
+        ...(echartsOption.textStyle || {}),
+      },
+    };
+
+    chart.setOption(optionsWithFont);
 
     // Output string
     const svgStr = chart.renderToSVGString();
@@ -67,10 +74,61 @@ export async function renderECharts(
     },
   });
 
-  chart.setOption({
+  // Inject font configuration into the chart options
+  const optionsWithFont = {
     ...echartsOption,
     animation: false,
-  });
+    textStyle: {
+      fontFamily: "sans-serif",
+      ...(echartsOption.textStyle || {}),
+    },
+    title: {
+      ...(echartsOption.title || {}),
+      textStyle: {
+        fontFamily: "sans-serif",
+        ...((echartsOption.title as any)?.textStyle || {}),
+      },
+    },
+    xAxis: Array.isArray(echartsOption.xAxis)
+      ? echartsOption.xAxis.map((axis) => ({
+          ...axis,
+          axisLabel: {
+            fontFamily: "sans-serif",
+            ...(axis.axisLabel || {}),
+          },
+        }))
+      : {
+          ...(echartsOption.xAxis || {}),
+          axisLabel: {
+            fontFamily: "sans-serif",
+            ...((echartsOption.xAxis as any)?.axisLabel || {}),
+          },
+        },
+    yAxis: Array.isArray(echartsOption.yAxis)
+      ? echartsOption.yAxis.map((axis) => ({
+          ...axis,
+          axisLabel: {
+            fontFamily: "sans-serif",
+            ...(axis.axisLabel || {}),
+          },
+        }))
+      : {
+          ...(echartsOption.yAxis || {}),
+          axisLabel: {
+            fontFamily: "sans-serif",
+            ...((echartsOption.yAxis as any)?.axisLabel || {}),
+          },
+        },
+    legend: {
+      ...(echartsOption.legend || {}),
+      textStyle: {
+        fontFamily: "sans-serif",
+        ...((echartsOption.legend as any)?.textStyle || {}),
+      },
+    },
+  };
+
+  chart.setOption(optionsWithFont);
 
   // @ts-ignore
   const buffer = canvas.toBuffer("image/png");
