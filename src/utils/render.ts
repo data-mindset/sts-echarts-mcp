@@ -4,22 +4,16 @@ import { GlobalFonts, createCanvas } from "@napi-rs/canvas";
 import * as echarts from "echarts";
 import type { EChartsOption } from "echarts";
 
-const fontPath = path.join(
-  __dirname,
-  "..",
-  "fonts",
-  "Roboto-Regular.ttf",
-);
+// Font will be copied to .smithery/fonts/ during build via postbuild script
+const fontPath = path.join(__dirname, "fonts", "Roboto-Regular.ttf");
 
-// Register font with graceful error handling
-// Silently continue if font is not found - charts will use system default fonts
+// Register font - postbuild script ensures it's available
 try {
   if (fs.existsSync(fontPath)) {
     GlobalFonts.registerFromPath(fontPath, "sans-serif");
   }
 } catch (error) {
-  // Silently ignore font loading errors
-  // Charts will render with system default fonts
+  // Font loading failed - charts will render without text
 }
 
 /**

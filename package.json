@@ -7,7 +7,8 @@
 	"type": "module",
 	"scripts": {
 		"dev": "smithery dev",
-		"build": "smithery build"
+		"build": "smithery build && npm run postbuild",
+		"postbuild": "mkdir -p .smithery/fonts && cp -r fonts/* .smithery/fonts/"
 	},
 	"keywords": ["mcp", "echarts", "visualization", "chart", "smithery"],
 	"author": "",
