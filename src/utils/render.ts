@@ -8,7 +8,7 @@ const fontPath = path.join(
   __dirname,
   "..",
   "fonts",
-  "AlibabaPuHuiTi-3-55-Regular.otf",
+  "Roboto-Regular.ttf",
 );
 
 // Register font with graceful error handling
